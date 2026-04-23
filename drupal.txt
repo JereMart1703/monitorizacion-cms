@@ -1,0 +1,138 @@
+CONFIGURACIÓN BASE DE DATOS DRUPAL
+
+Tipo de base de datos:
+MySQL / MariaDB
+
+Nombre de la base de datos:
+testdb
+
+Usuario:
+user
+
+Contraseña:
+userpass
+
+Opciones avanzadas:
+Host: mysql
+Puerto: 3306
+
+
+-------------------------------------
+
+CONFIGURACIÓN DEL SITIO
+
+Nombre del sitio:
+Proyecto Monitorización ASIR
+
+Correo del sitio:
+admin@proyecto.local
+
+
+-------------------------------------
+
+CUENTA ADMINISTRADOR
+
+Usuario:
+admin
+
+Contraseña:
+admin123
+
+Correo:
+admin@proyecto.local
+
+
+-------------------------------------
+
+CONFIGURACIÓN REGIONAL
+
+Zona horaria:
+Madrid
+
+OPCIONAL PARA MEJORAR EL PROYECTO
+
+1. PERSISTENCIA DE MYSQL
+Añadir en el servicio mysql:
+
+volumes:
+  - mysql_data:/var/lib/mysql
+
+Y al final del compose:
+volumes:
+  mysql_data:
+
+Sirve para no perder la base de datos al hacer docker compose down -v.
+
+
+2. PERSISTENCIA DE GRAFANA
+Añadir en el servicio grafana:
+
+volumes:
+  - grafana_data:/var/lib/grafana
+
+Y al final del compose:
+volumes:
+  grafana_data:
+
+Sirve para no perder dashboards, datasources y alertas.
+
+
+3. PERSISTENCIA DE PROMETHEUS
+Añadir en el servicio prometheus:
+
+volumes:
+  - ./prometheus.yml:/etc/prometheus/prometheus.yml
+  - prometheus_data:/prometheus
+
+Y al final del compose:
+volumes:
+  prometheus_data:
+
+Sirve para no perder historial de métricas.
+
+
+4. DRUPAL COMPARTIENDO ARCHIVOS (MODO PRO)
+Añadir en drupal1 y drupal2:
+
+volumes:
+  - drupal_shared:/var/www/html
+
+Y al final del compose:
+volumes:
+  drupal_shared:
+
+Esto hace que ambos Drupal compartan archivos/configuración.
+Es lo más parecido a una arquitectura real si ambos usan la misma base de datos.
+
+
+5. PROMETHEUS DEBE TENER ESTO EN prometheus.yml
+Ejemplo mínimo:
+
+global:
+  scrape_interval: 5s
+
+scrape_configs:
+  - job_name: 'node_exporter'
+    static_configs:
+      - targets: ['node_exporter:9100']
+
+  - job_name: 'mysql'
+    static_configs:
+      - targets: ['mysqld_exporter:9104']
+
+
+6. DATOS QUE DEBEN PONERSE EN DRUPAL1 Y DRUPAL2
+Ambos deben usar:
+
+Base de datos: testdb
+Usuario: user
+Contraseña: userpass
+Host: mysql
+Puerto: 3306
+
+
+7. IMPORTANTE
+Si ambos Drupal usan la misma base de datos pero NO comparten archivos,
+pueden aparecer problemas o comportamientos raros.
+Para una demo rápida puede valer.
+Para hacerlo como en producción, conviene además compartir archivos con drupal_shared.
