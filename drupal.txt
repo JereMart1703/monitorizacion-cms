@@ -136,3 +136,14 @@ Si ambos Drupal usan la misma base de datos pero NO comparten archivos,
 pueden aparecer problemas o comportamientos raros.
 Para una demo rápida puede valer.
 Para hacerlo como en producción, conviene además compartir archivos con drupal_shared.
+
+
+urls : 
+
+Prometheus → http://localhost:1111
+Grafana → http://localhost:3333
+Drupal1 → http://localhost:7777
+Drupal2 → http://localhost:8888
+HAProxy → http://localhost:9999
+HAProxy stats → http://localhost:9998/haproxy_status
+MySQL (DBeaver) → localhost:5555

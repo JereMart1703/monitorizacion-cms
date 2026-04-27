@@ -3,7 +3,7 @@ services:
     image: prom/prometheus
     container_name: prometheus
     ports:
-      - "9090:9090"
+      - "1111:9090"
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
 
@@ -11,19 +11,19 @@ services:
     image: prom/node-exporter
     container_name: node_exporter
     ports:
-      - "9100:9100"
+      - "2222:9100"
 
   grafana:
     image: grafana/grafana
     container_name: grafana
     ports:
-      - "3000:3000"
+      - "3333:3000"
 
   loki:
     image: grafana/loki:2.9.0
     container_name: loki
     ports:
-      - "3100:3100"
+      - "4444:3100"
     command: -config.file=/etc/loki/local-config.yaml
 
   fluentbit:
@@ -37,57 +37,54 @@ services:
     image: mysql:8.0
     container_name: mysql
     environment:
-      MYSQL_ROOT_PASSWORD: rootpass
-      MYSQL_DATABASE: testdb
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: monitorizacion_tfg  
       MYSQL_USER: user
-      MYSQL_PASSWORD: userpass
+      MYSQL_PASSWORD: clave
     ports:
-      - "3306:3306"
+      - "5555:3306"
 
   mysqld_exporter:
     image: prom/mysqld-exporter
     container_name: mysqld_exporter
     ports:
-      - "9104:9104"
+      - "6666:9104"
     volumes:
       - ./my.cnf:/etc/mysql/my.cnf:ro
     command:
       - "--config.my-cnf=/etc/mysql/my.cnf"
 
-  drupal1:
+  jeremy_drupal1:
     image: drupal:10-apache
-    container_name: drupal1
+    container_name: jeremy_drupal1
     ports:
-      - "8081:80"
+      - "7777:80"
     depends_on:
       - mysql
     volumes:
       - drupal_data:/opt/drupal/web
-    # ambos nodos comparten los archivos del sitio
 
-  drupal2:
+  jeremy_drupal2:
     image: drupal:10-apache
-    container_name: drupal2
+    container_name: jeremy_drupal2
     ports:
-      - "8082:80"
+      - "8888:80"
     depends_on:
       - mysql
     volumes:
       - drupal_data:/opt/drupal/web
-    # ambos nodos comparten los archivos del sitio
 
   haproxy:
     image: haproxy:latest
     container_name: haproxy
     ports:
-      - "8080:80"
-      - "8404:8404"
+      - "9999:80"
+      - "9998:8404"
     volumes:
       - ./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
     depends_on:
-      - drupal1
-      - drupal2
+      - jeremy_drupal1
+      - jeremy_drupal2
 
-# 👇 ESTO VA AQUÍ ABAJO DEL TODO
 volumes:
   drupal_data:
