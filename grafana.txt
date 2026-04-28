@@ -1,0 +1,104 @@
+CONFIGURACIÓN MANUAL DE GRAFANA
+
+1. Acceso a Grafana
+Abrir en el navegador:
+http://localhost:3333
+
+Usuario: admin
+Contraseña: admin
+
+----------------------------------------
+
+2. Añadir Prometheus
+
+Ir a:
+Configuration → Data Sources → Add data source
+
+Seleccionar:
+Prometheus
+
+Configurar:
+URL: http://prometheus:9090
+
+IMPORTANTE:
+- Usar el nombre del contenedor (prometheus)
+- No usar localhost
+
+Guardar:
+Save & Test
+
+Debe aparecer:
+Data source is working
+
+----------------------------------------
+
+3. Añadir Loki
+
+Ir a:
+Configuration → Data Sources → Add data source
+
+Seleccionar:
+Loki
+
+Configurar:
+URL: http://loki:3100
+
+Guardar:
+Save & Test
+
+----------------------------------------
+
+4. Crear Dashboard
+
+Ir a:
++ → Dashboard → Add new panel
+
+----------------------------------------
+
+5. Queries útiles (MUY IMPORTANTE)
+
+MÉTRICAS (Prometheus):
+
+CPU usage:
+rate(node_cpu_seconds_total[1m])
+
+CPU total (mejor para gráficas):
+100 - (avg by (instance) (rate(node_cpu_seconds_total{mode="idle"}[1m])) * 100)
+
+Memoria usada:
+node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes
+
+Memoria en porcentaje:
+(1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100
+
+----------------------------------------
+
+LOGS (Loki):
+
+Ver logs de Drupal 1:
+{container_name="jeremy_drupal1"}
+
+Ver logs de Drupal 2:
+{container_name="jeremy_drupal2"}
+
+Ver todos los logs:
+{job="docker"}
+
+----------------------------------------
+
+6. Capturas recomendadas para el proyecto
+
+- Data source Prometheus funcionando
+- Data source Loki funcionando
+- Dashboard con CPU
+- Dashboard con memoria
+- Logs en Grafana
+- Picos de carga (usando ab o stress-ng)
+
+----------------------------------------
+
+Notas importantes:
+- Usar siempre nombres de contenedor (prometheus, loki)
+- No usar localhost
+- Verificar siempre con "Save & Test"
+- Hacer pruebas de carga para que las gráficas se muevan
