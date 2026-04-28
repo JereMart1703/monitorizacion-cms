@@ -26,7 +26,6 @@ services:
     container_name: loki
     ports:
       - "4444:3100"
-    command: -config.file=/etc/loki/local-config.yaml
 
   fluentbit:
     image: grafana/fluent-bit-plugin-loki:latest
