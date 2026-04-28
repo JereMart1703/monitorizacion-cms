@@ -19,7 +19,7 @@ services:
     ports:
       - "3333:3000"
     volumes:
-    - grafana_data:/var/lib/grafana
+      - grafana_data:/var/lib/grafana
 
   loki:
     image: grafana/loki:2.9.0

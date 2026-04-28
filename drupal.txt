@@ -145,5 +145,12 @@ Grafana → http://localhost:3333
 Drupal1 → http://localhost:7777
 Drupal2 → http://localhost:8888
 HAProxy → http://localhost:9999
-HAProxy stats → http://localhost:9998/haproxy_status
+HAProxy stats → http://localhost:9998/tfg_haproxy
 MySQL (DBeaver) → localhost:5555
+
+drupal : 
+Base de datos: monitorizacion_tfg
+Usuario: user
+Contraseña: clave
+Host: mysql
+Puerto: 3306
