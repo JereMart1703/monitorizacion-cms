@@ -30,6 +30,8 @@ services:
   fluentbit:
     image: grafana/fluent-bit-plugin-loki:latest
     container_name: fluentbit
+    ports:
+      - "2020:2020"
     volumes:
       - ./fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
